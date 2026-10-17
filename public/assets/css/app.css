@@ -1,0 +1,10 @@
+/* Small custom overrides that sit on top of the compiled Tailwind build. */
+
+html {
+  scroll-behavior: smooth;
+}
+
+.prose-issp a {
+  color: #1F5C3D;
+  text-decoration: underline;
+}

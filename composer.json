@@ -1,0 +1,14 @@
+{
+  "name": "issp/website",
+  "description": "ISSP (Insurance Sector Strengthening Program) website - PHP/MySQLi backend",
+  "type": "project",
+  "require": {
+    "php": ">=8.1",
+    "phpmailer/phpmailer": "^6.9"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    }
+  }
+}
