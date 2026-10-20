@@ -2,11 +2,12 @@
 $icon = '<svg viewBox="0 0 24 24" class="h-10 w-10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h13a2 2 0 0 1 2 2v12a1 1 0 0 1-1 1H6a2 2 0 0 1-2-2V5Z M20 9H17a1 1 0 0 0-1 1v10 M7 9h6 M7 12.5h6 M7 16h4"/></svg>';
 $activeSlug = $activeCategory['slug'] ?? '';
 $isFirstPage = $page === 1;
-$lead  = ($isFirstPage && $posts) ? $posts[0] : null;
+$lead  = ($isFirstPage && $posts && $search === '') ? $posts[0] : null;
 $rest  = $lead ? array_slice($posts, 1) : $posts;
-$pageUrl = static function (int $p) use ($activeSlug): string {
+$pageUrl = static function (int $p) use ($activeSlug, $search): string {
     $q = [];
     if ($activeSlug !== '') { $q['category'] = $activeSlug; }
+    if ($search !== '') { $q['q'] = $search; }
     if ($p > 1) { $q['page'] = $p; }
     return '/news' . ($q ? '?' . http_build_query($q) : '');
 };
@@ -25,11 +26,23 @@ $meta = static function (array $post): string {
         <p class="text-gray-500 mt-3">Announcements, progress reports and insights from across Nigeria's insurance sector.</p>
     </header>
 
+    <form method="GET" action="/news" class="mt-8 flex gap-2 max-w-xl">
+        <?php if ($activeSlug !== ''): ?><input type="hidden" name="category" value="<?= e($activeSlug) ?>"><?php endif; ?>
+        <div class="relative flex-1">
+            <svg viewBox="0 0 24 24" class="h-4 w-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M10.5 18a7.5 7.5 0 1 0 0-15 7.5 7.5 0 0 0 0 15Z M16 16l5 5"/></svg>
+            <input type="search" name="q" value="<?= e($search) ?>" placeholder="Search articles&hellip;" class="w-full rounded-lg border border-gray-200 pl-10 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-issp-green-500/30 focus:border-issp-green-500">
+        </div>
+        <button type="submit" class="rounded-lg bg-issp-green-700 hover:bg-issp-green-600 text-white px-5 text-sm font-medium">Search</button>
+    </form>
+    <?php if ($search !== ''): ?>
+        <p class="mt-3 text-sm text-gray-500"><?= (int) $total ?> result<?= $total === 1 ? '' : 's' ?> for &ldquo;<?= e($search) ?>&rdquo; &middot; <a href="/news<?= $activeSlug !== '' ? '?category=' . e($activeSlug) : '' ?>" class="text-issp-green-700 hover:underline">Clear search</a></p>
+    <?php endif; ?>
+
     <?php if ($categories): ?>
-        <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter by category">
-            <a href="/news" class="rounded-full border px-4 py-1.5 text-sm font-medium <?= $activeSlug === '' ? 'bg-issp-green-700 border-issp-green-700 text-white' : 'border-gray-200 text-gray-600 hover:border-issp-green-500 hover:text-issp-green-700' ?>">All</a>
+        <nav class="mt-5 flex flex-wrap gap-2" aria-label="Filter by category">
+            <a href="/news<?= $search !== '' ? '?q=' . urlencode($search) : '' ?>" class="rounded-full border px-4 py-1.5 text-sm font-medium <?= $activeSlug === '' ? 'bg-issp-green-700 border-issp-green-700 text-white' : 'border-gray-200 text-gray-600 hover:border-issp-green-500 hover:text-issp-green-700' ?>">All</a>
             <?php foreach ($categories as $c): ?>
-                <a href="/news?category=<?= e($c['slug']) ?>" class="rounded-full border px-4 py-1.5 text-sm font-medium <?= $activeSlug === $c['slug'] ? 'bg-issp-green-700 border-issp-green-700 text-white' : 'border-gray-200 text-gray-600 hover:border-issp-green-500 hover:text-issp-green-700' ?>"><?= e($c['name']) ?></a>
+                <a href="/news?category=<?= e($c['slug']) ?><?= $search !== '' ? '&q=' . urlencode($search) : '' ?>" class="rounded-full border px-4 py-1.5 text-sm font-medium <?= $activeSlug === $c['slug'] ? 'bg-issp-green-700 border-issp-green-700 text-white' : 'border-gray-200 text-gray-600 hover:border-issp-green-500 hover:text-issp-green-700' ?>"><?= e($c['name']) ?></a>
             <?php endforeach; ?>
         </nav>
     <?php endif; ?>
@@ -74,8 +87,8 @@ $meta = static function (array $post): string {
 
     <?php if (empty($posts)): ?>
         <div class="mt-12 rounded-2xl bg-gray-50 px-6 py-16 text-center">
-            <p class="text-gray-600"><?= $activeCategory ? 'No articles in this category yet.' : 'No articles published yet.' ?></p>
-            <?php if ($activeCategory): ?><a href="/news" class="inline-block mt-3 text-sm font-medium text-issp-green-700">View all articles</a><?php endif; ?>
+            <p class="text-gray-600"><?= $search !== '' ? 'No articles match your search.' : ($activeCategory ? 'No articles in this category yet.' : 'No articles published yet.') ?></p>
+            <?php if ($activeCategory || $search !== ''): ?><a href="/news" class="inline-block mt-3 text-sm font-medium text-issp-green-700">View all articles</a><?php endif; ?>
         </div>
     <?php endif; ?>
 

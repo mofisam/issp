@@ -27,6 +27,7 @@ $icons = [
     'photo'      => 'M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z M3 16l5-5 4 4 3-3 6 6 M8.5 10.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z',
     'cog'        => 'M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z M19.4 13.5a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V20a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.04-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87A1.7 1.7 0 0 0 3.52 12.46H3.4a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 5.06 7.42a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.08A1.7 1.7 0 0 0 10.54 1.5V1.4a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1.04 1.56h.08a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.08a1.7 1.7 0 0 0 1.56 1.04h.1a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.56 1.04Z',
     'question'   => 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z M9.25 9.3a2.75 2.75 0 1 1 3.95 2.47c-.7.35-1.2 1-1.2 1.73v.3 M12 16.5h.01',
+    'trash'      => 'M4 7h16M10 11v6M14 11v6M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12M9 7V4h6v3',
     'clock'      => 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z M12 7v5l3.5 2',
 ];
 
@@ -54,6 +55,7 @@ $navGroups = [
         ['label' => 'Organizations', 'href' => '/admin/organizations', 'icon' => 'building', 'roles' => ['super_admin', 'admin']],
         ['label' => 'Users & Roles', 'href' => '/admin/users',         'icon' => 'shield',   'roles' => ['super_admin']],
         ['label' => 'Activity Log',  'href' => '/admin/activity',      'icon' => 'clock',    'roles' => ['super_admin']],
+        ['label' => 'Recycle Bin',   'href' => '/admin/recycle-bin',   'icon' => 'trash',    'roles' => ['super_admin']],
         ['label' => 'Settings',      'href' => '/admin/settings',      'icon' => 'cog',       'roles' => ['super_admin', 'admin']],
     ],
 ];

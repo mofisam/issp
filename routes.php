@@ -37,6 +37,7 @@ use App\Controllers\Admin\SettingsController as AdminSettingsController;
 use App\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Controllers\Admin\FaqController as AdminFaqController;
 use App\Controllers\Admin\ActivityLogController as AdminActivityLogController;
+use App\Controllers\Admin\RecycleBinController as AdminRecycleBinController;
 
 // --- Public site -------------------------------------------------------
 $router->get('/', [HomeController::class, 'index']);
@@ -47,6 +48,7 @@ $router->get('/news/{slug}', [PostController::class, 'show']);
 $router->get('/resources', [ResourceController::class, 'index']);
 $router->get('/resources/{id}/download', [ResourceController::class, 'download']);
 $router->get('/events', [EventController::class, 'index']);
+$router->get('/events/{slug}/calendar', [EventController::class, 'calendar']);
 $router->get('/events/{slug}', [EventController::class, 'show']);
 $router->post('/events/{id}/register', [EventController::class, 'register']);
 $router->get('/team', [TeamController::class, 'index']);
@@ -178,3 +180,8 @@ $router->post('/admin/faqs/{id}/move-up', [AdminFaqController::class, 'moveUp'])
 $router->post('/admin/faqs/{id}/move-down', [AdminFaqController::class, 'moveDown']);
 
 $router->get('/admin/activity', [AdminActivityLogController::class, 'index']);
+
+$router->get('/admin/recycle-bin', [AdminRecycleBinController::class, 'index']);
+$router->post('/admin/recycle-bin/empty', [AdminRecycleBinController::class, 'emptyBin']);
+$router->post('/admin/recycle-bin/{type}/{id}/restore', [AdminRecycleBinController::class, 'restore']);
+$router->post('/admin/recycle-bin/{type}/{id}/delete', [AdminRecycleBinController::class, 'destroy']);

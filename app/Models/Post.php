@@ -10,28 +10,31 @@ class Post extends Model
     protected static string $table = 'posts';
     protected static bool $softDeletes = true;
 
-    public static function publishedPaginated(int $page = 1, int $perPage = 9, ?int $categoryId = null): array
+    public static function publishedPaginated(int $page = 1, int $perPage = 9, ?int $categoryId = null, string $search = ''): array
     {
         $db     = \App\Core\Database::connection();
         $offset = ($page - 1) * $perPage;
         $cat    = $categoryId ?? 0;
+        $like   = '%' . $search . '%';
         $stmt   = $db->prepare(
             "SELECT * FROM posts WHERE status = 'published' AND deleted_at IS NULL AND (? = 0 OR category_id = ?)
+               AND (? = '' OR title LIKE ? OR excerpt LIKE ?)
               ORDER BY published_at DESC, id DESC LIMIT ? OFFSET ?"
         );
-        $stmt->bind_param('iiii', $cat, $cat, $perPage, $offset);
+        $stmt->bind_param('iisssii', $cat, $cat, $search, $like, $like, $perPage, $offset);
         $stmt->execute();
         $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
         return $rows;
     }
 
-    public static function publishedCount(?int $categoryId = null): int
+    public static function publishedCount(?int $categoryId = null, string $search = ''): int
     {
         $db   = \App\Core\Database::connection();
         $cat  = $categoryId ?? 0;
-        $stmt = $db->prepare("SELECT COUNT(*) c FROM posts WHERE status = 'published' AND deleted_at IS NULL AND (? = 0 OR category_id = ?)");
-        $stmt->bind_param('ii', $cat, $cat);
+        $like = '%' . $search . '%';
+        $stmt = $db->prepare("SELECT COUNT(*) c FROM posts WHERE status = 'published' AND deleted_at IS NULL AND (? = 0 OR category_id = ?) AND (? = '' OR title LIKE ? OR excerpt LIKE ?)");
+        $stmt->bind_param('iisss', $cat, $cat, $search, $like, $like);
         $stmt->execute();
         $n = (int) ($stmt->get_result()->fetch_assoc()['c'] ?? 0);
         $stmt->close();

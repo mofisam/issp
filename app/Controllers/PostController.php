@@ -21,12 +21,13 @@ class PostController extends Controller
             }
         }
 
+        $search     = mb_substr(trim((string) $this->input('q', '')), 0, 100);
         $categoryId = $active ? (int) $active['id'] : null;
-        $total      = Post::publishedCount($categoryId);
+        $total      = Post::publishedCount($categoryId, $search);
         $lastPage   = max(1, (int) ceil($total / self::PER_PAGE));
         $page       = min(max(1, (int) $this->input('page', 1)), $lastPage);
 
-        $posts = Post::publishedPaginated($page, self::PER_PAGE, $categoryId);
+        $posts = Post::publishedPaginated($page, self::PER_PAGE, $categoryId, $search);
         $names = array_column($categories, 'name', 'id');
         foreach ($posts as &$post) {
             $post['image_url']     = media_url($post['featured_media_id'] ?? null);
@@ -42,6 +43,7 @@ class PostController extends Controller
             'page'           => $page,
             'lastPage'       => $lastPage,
             'total'          => $total,
+            'search'         => $search,
         ]);
     }
 

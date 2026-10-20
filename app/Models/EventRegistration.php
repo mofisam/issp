@@ -21,4 +21,27 @@ class EventRegistration extends Model
         $stmt->close();
         return $ok;
     }
+
+    /** Seats taken (cancelled sign-ups don't count). */
+    public static function countFor(int $eventId): int
+    {
+        $db   = \App\Core\Database::connection();
+        $stmt = $db->prepare("SELECT COUNT(*) c FROM event_registrations WHERE event_id = ? AND status <> 'cancelled'");
+        $stmt->bind_param('i', $eventId);
+        $stmt->execute();
+        $n = (int) ($stmt->get_result()->fetch_assoc()['c'] ?? 0);
+        $stmt->close();
+        return $n;
+    }
+
+    public static function exists(int $eventId, string $email): bool
+    {
+        $db   = \App\Core\Database::connection();
+        $stmt = $db->prepare("SELECT 1 FROM event_registrations WHERE event_id = ? AND email = ? AND status <> 'cancelled' LIMIT 1");
+        $stmt->bind_param('is', $eventId, $email);
+        $stmt->execute();
+        $found = (bool) $stmt->get_result()->fetch_row();
+        $stmt->close();
+        return $found;
+    }
 }
