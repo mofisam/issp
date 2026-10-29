@@ -11,23 +11,101 @@ $pillarIcons = [
 ];
 ?>
 <!-- Hero -->
-<section class="relative overflow-hidden bg-issp-green-800 text-white">
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.08),transparent_55%)]"></div>
-    <div class="relative max-w-6xl mx-auto px-6 py-24 md:py-28 text-center">
-        <span class="inline-flex items-center gap-2 bg-white/10 text-white/90 text-xs font-medium px-3 py-1.5 rounded-full mb-6">
-            Insurance Sector Strengthening Program
+<?php
+$heroSlides = [
+    ['img' => 'launch-1.jpg', 'pos' => '50% 25%', 'title' => 'Transparent. Accountable. Results-Driven.',
+     'text' => 'Led by EMDI Capacity Development and NINE to build a sustainable, world-class insurance ecosystem.'],
+    ['img' => 'launch-3.jpg', 'pos' => '50% 40%', 'title' => "Transforming Nigeria's Insurance Landscape",
+     'text' => 'Driving trust, expanding retail access, and pushing penetration of 10% of GDP by 2031.'],
+    ['img' => 'launch-4.jpg', 'pos' => '55% 30%', 'title' => 'Unlocking a $2 Trillion Opportunity',
+     'text' => 'Reaching 25 million Nigerians and training 6,000 professionals across all 36 states and the FCT.'],
+    ['img' => 'launch-2.jpg', 'pos' => '50% 30%', 'title' => 'Driving Inclusive & Ethical Protection',
+     'text' => 'Expanding alternative insurance solutions to protect vulnerable communities, MSMEs, women, and youth.'],
+];
+?>
+<style>
+    .hero-slide { opacity: 0; transition: opacity 1.2s ease; }
+    .hero-slide.is-active { opacity: 1; }
+    .hero-slide img { transform: scale(1.02); }
+    .hero-slide.is-active img { animation: heroZoom 9s ease-out forwards; }
+    @keyframes heroZoom { from { transform: scale(1.02); } to { transform: scale(1.1); } }
+    @keyframes heroRise { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+    @keyframes heroFade { from { opacity: 0; } to { opacity: 1; } }
+    .hero-rise { opacity: 0; animation: heroRise .8s cubic-bezier(.2,.7,.2,1) forwards; }
+    .hero-copy { grid-area: 1 / 1; visibility: hidden; }
+    .hero-copy.is-active { visibility: visible; }
+    .hero-word, .hero-copy .hero-sub { opacity: 0; }
+    .hero-copy.is-active .hero-word { display: inline-block; animation: heroRise .8s cubic-bezier(.2,.7,.2,1) forwards; }
+    .hero-copy.is-active .hero-sub { animation: heroRise .8s cubic-bezier(.2,.7,.2,1) .75s forwards; }
+    .hero-word { display: inline-block; }
+    .hero-bar > span { display: block; height: 100%; width: 0; background: #E8841F; }
+    .hero-dot.is-active .hero-bar > span { animation: heroBar var(--hero-ms, 6500ms) linear forwards; }
+    .hero-paused .hero-dot.is-active .hero-bar > span { animation-play-state: paused; }
+    @keyframes heroBar { from { width: 0; } to { width: 100%; } }
+    @media (prefers-reduced-motion: reduce) {
+        .hero-slide, .hero-slide img, .hero-rise, .hero-word, .hero-copy .hero-sub { animation: none !important; transition: none !important; opacity: 1; transform: none; }
+        .hero-slide:not(.is-active) { opacity: 0; }
+    }
+</style>
+<section id="hero" class="relative overflow-hidden bg-issp-green-900 text-white" aria-roledescription="carousel" aria-label="Programme highlights">
+    <div class="absolute inset-0" id="hero-slides">
+        <?php foreach ($heroSlides as $i => $slide): ?>
+            <div class="hero-slide absolute inset-0 <?= $i === 0 ? 'is-active' : '' ?>" role="group" aria-roledescription="slide" aria-label="<?= $i + 1 ?> of <?= count($heroSlides) ?>">
+                <img src="<?= asset('img/hero/' . $slide['img']) ?>" alt="" class="h-full w-full object-cover" style="object-position: <?= e($slide['pos']) ?>" <?= $i > 0 ? 'loading="lazy"' : 'fetchpriority="high"' ?>>
+            </div>
+        <?php endforeach; ?>
+        <div class="absolute inset-0 bg-gradient-to-r from-issp-green-900 via-issp-green-900/80 to-issp-green-900/20"></div>
+        <div class="absolute inset-0 bg-issp-green-900/40 md:hidden"></div>
+        <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-issp-green-900/90 to-transparent"></div>
+    </div>
+
+    <div class="relative max-w-6xl mx-auto px-6 pt-24 pb-36 md:pt-32 md:pb-44 min-h-[620px] md:min-h-[680px] flex flex-col justify-center">
+        <span class="hero-rise inline-flex w-fit items-center gap-2 bg-white/10 backdrop-blur text-white/90 text-xs font-medium px-3 py-1.5 rounded-full mb-6 border border-white/10" style="animation-delay:.1s">
+            <span class="h-1.5 w-1.5 rounded-full bg-issp-orange-500"></span> Insurance Sector Strengthening Program
         </span>
-        <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-5">Transforming Nigeria's<br class="hidden md:block"> Insurance Landscape</h1>
-        <p class="text-lg text-white/80 max-w-2xl mx-auto mb-10">Driving trust, expanding retail access, and pushing insurance penetration from 10% of GDP by 2031.</p>
-        <div class="flex flex-wrap items-center justify-center gap-4">
+        <div class="grid" id="hero-copy">
+            <?php foreach ($heroSlides as $i => $slide): ?>
+                <div class="hero-copy <?= $i === 0 ? 'is-active' : '' ?>" <?= $i > 0 ? 'aria-hidden="true"' : '' ?>>
+                    <<?= $i === 0 ? 'h1' : 'h2' ?> class="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.07] max-w-3xl">
+                        <?php foreach (preg_split('/\s+/', $slide['title']) as $w => $word): ?><span class="hero-word" style="animation-delay:<?= 0.1 + $w * 0.09 ?>s"><?= e($word) ?></span> <?php endforeach; ?>
+                    </<?= $i === 0 ? 'h1' : 'h2' ?>>
+                    <p class="hero-sub text-lg md:text-xl text-white/80 max-w-xl mt-6"><?= e($slide['text']) ?></p>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <div class="hero-rise flex flex-wrap items-center gap-4 mt-9" style="animation-delay:.9s">
             <a href="/contact" class="inline-flex items-center gap-2 bg-issp-orange-600 hover:bg-issp-orange-700 transition-colors text-white px-6 py-3 rounded-lg font-medium">
                 Partner With Us
                 <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14 M13 6l6 6-6 6"/></svg>
             </a>
-            <a href="/about" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 transition-colors text-white px-6 py-3 rounded-lg font-medium border border-white/15">Learn more</a>
+            <a href="/about" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 backdrop-blur transition-colors text-white px-6 py-3 rounded-lg font-medium border border-white/20">Learn more</a>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="absolute inset-x-0 bottom-0">
+        <div class="max-w-6xl mx-auto px-6 pb-7 flex items-end justify-between gap-6">
+            <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                    <?php foreach ($heroSlides as $i => $slide): ?>
+                        <button type="button" class="hero-dot group py-2 <?= $i === 0 ? 'is-active' : '' ?>" data-index="<?= $i ?>" aria-label="Go to slide <?= $i + 1 ?>">
+                            <span class="hero-bar block h-1 w-10 md:w-14 rounded-full bg-white/30 group-hover:bg-white/50 overflow-hidden"><span></span></span>
+                        </button>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <div class="hidden sm:flex items-center gap-2 flex-shrink-0">
+                <button type="button" id="hero-prev" aria-label="Previous slide" class="h-11 w-11 rounded-full border border-white/25 bg-white/10 hover:bg-white/20 backdrop-blur flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <button type="button" id="hero-next" aria-label="Next slide" class="h-11 w-11 rounded-full border border-white/25 bg-white/10 hover:bg-white/20 backdrop-blur flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+                </button>
+            </div>
         </div>
     </div>
 </section>
+<script src="<?= asset('js/hero.js') ?>" defer></script>
 
 <!-- Impact & Results -->
 <section class="max-w-6xl mx-auto px-6 py-16 md:py-20">

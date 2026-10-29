@@ -22,7 +22,7 @@ $chartMax = max(array_column($caseForAction, 'value'));
 
         <div class="mt-14 flex flex-wrap gap-x-16 gap-y-8 border-t border-white/15 pt-10">
             <div>
-                <div class="font-serif text-4xl md:text-5xl text-issp-orange-500">10%</div>
+                <div class="font-serif text-4xl md:text-5xl text-issp-orange-500">0.5% &rarr; 10%</div>
                 <div class="mt-1.5 text-sm text-white/60">Insurance-to-GDP ratio, targeted by 2031</div>
             </div>
             <div>
@@ -39,11 +39,20 @@ $chartMax = max(array_column($caseForAction, 'value'));
 
 <!-- Narrative -->
 <section class="max-w-5xl mx-auto px-6 py-16 md:py-24">
-    <div class="max-w-[62ch]">
+  <div class="grid lg:grid-cols-5 gap-12 lg:gap-14 items-start">
+    <div class="lg:col-span-3 max-w-[62ch]">
         <p class="font-serif text-2xl md:text-[1.75rem] leading-snug text-gray-900">Despite being Africa's largest economy, Nigeria's insurance penetration sits at just 0.5% of GDP &mdash; against a continental average of 3.2%.</p>
         <p class="mt-6 text-gray-600 leading-relaxed">The ISSP exists to close that gap: through advocacy, awareness, capacity building and inclusive growth that reaches the women, youth and small businesses the sector has historically left behind. It is designed to respond directly to the structural barriers &mdash; limited awareness, weak product innovation, gender disparities, youth exclusion and thin MSME coverage &mdash; that have kept insurance out of reach for most Nigerians.</p>
         <p class="mt-5 text-gray-600 leading-relaxed">Led by the National Insurance Commission (NAICOM) together with government, regulators, insurers, brokers, development partners and innovators, the programme translates regulatory intent into measurable impact &mdash; coordinated action in place of isolated initiatives.</p>
     </div>
+    <figure class="lg:col-span-2 lg:sticky lg:top-8">
+        <div class="relative">
+            <div class="absolute -inset-3 rounded-3xl bg-issp-green-50 -rotate-2" aria-hidden="true"></div>
+            <img src="<?= asset('img/about-launch.jpg') ?>" alt="Programme leaders at the official launch of the ISSP, presenting an appreciation award to the keynote speaker" loading="lazy" class="relative rounded-2xl w-full aspect-[3/2] object-cover object-center shadow-card">
+        </div>
+        <figcaption class="mt-5 text-sm text-gray-500 leading-snug">The official launch of the ISSP, where partners marked the start of the programme.</figcaption>
+    </figure>
+  </div>
 </section>
 
 <!-- Case for Action -->
